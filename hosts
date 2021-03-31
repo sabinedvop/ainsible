@@ -1,0 +1,7 @@
+[nginx]
+172.16.138.134 ansible_connection=centos        ansible_user=ovono92 ansible_become_pass=centos
+
+ 
+
+[haproxy]
+172.16.138.134 ansible_connection=centos        ansible_user=ovono92 ansible_become_pass=centos

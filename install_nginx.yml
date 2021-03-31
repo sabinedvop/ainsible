@@ -1,0 +1,52 @@
+- hosts: nginx
+  become: yes
+  tasks:
+  - name: install epel-release
+    yum:
+      name: epel-release
+      state: present
+
+  - name: "yum update"
+    yum:
+      update_cache: yes
+
+  - name: "installation git"
+    yum:
+      name=git
+
+  - name: "install nginx"
+    yum: 
+      name=nginx
+
+  - name: Remove nginx default site
+    file:
+      path: /usr/share/nginx/html
+      state: absent
+
+  - name: create a directory if it doesn't exist
+    file:
+      path: /usr/share/nginx/html
+      state: directory
+      mode: 0755
+
+  - name: clone git reposirory
+    git:
+     repo: 'https://github.com/diranetafen/static-website-example.git'
+     dest: /usr/share/nginx/html
+     clone: yes
+     update: yes 
+
+  - name: insert firewalld rule for nginx
+    firewalld:
+           service: http 
+           permanent: true 
+           state: enabled
+           immediate: yes
+
+  - name: http service state
+    service: name=nginx state=started enabled=yes
+
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted enabled=yes
